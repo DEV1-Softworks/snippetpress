@@ -1,0 +1,24 @@
+# Dependencies
+vendor/
+node_modules/
+
+# Build artifacts
+*.zip
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
