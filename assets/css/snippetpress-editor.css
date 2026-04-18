@@ -1,0 +1,39 @@
+/* SnippetPress — Block Editor styles */
+
+.snippetpress-editor-block {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 1em 0;
+}
+
+.snippetpress-editor-header {
+    display: flex;
+    align-items: center;
+    background: #f0f0f1;
+    padding: 0.4em 0.8em;
+    border-bottom: 1px solid #ddd;
+}
+
+.snippetpress-lang-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1e1e2e;
+    background: #cdd6f4;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+}
+
+.snippetpress-code-input textarea.components-textarea-control__input {
+    font-family: 'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    tab-size: 4;
+    -moz-tab-size: 4;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border: none;
+    border-radius: 0;
+    padding: 1em;
+    resize: vertical;
+}
