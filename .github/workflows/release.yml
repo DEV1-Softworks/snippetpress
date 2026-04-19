@@ -1,0 +1,67 @@
+name: Release — WordPress Plugin ZIP
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Run tests before release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run tests
+        run: vendor/bin/phpunit --colors=always
+
+  release:
+    name: Build and publish ZIP
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from plugin header
+        id: version
+        run: |
+          VERSION=$(grep -oP 'Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' snippetpress.php)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Plugin version: $VERSION"
+
+      - name: Build plugin ZIP
+        run: |
+          mkdir -p build/snippetpress
+          cp snippetpress.php build/snippetpress/
+          cp -r includes build/snippetpress/
+          cp -r assets build/snippetpress/
+          if [ -f README.txt ]; then cp README.txt build/snippetpress/; fi
+          if [ -f LICENSE ]; then cp LICENSE build/snippetpress/; fi
+          cd build && zip -r ../snippetpress-${{ steps.version.outputs.version }}.zip snippetpress/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: SnippetPress v${{ steps.version.outputs.version }}
+          body: |
+            ## SnippetPress v${{ steps.version.outputs.version }}
+
+            Download `snippetpress-${{ steps.version.outputs.version }}.zip` and install it via **WordPress Admin → Plugins → Add New → Upload Plugin**.
+          files: snippetpress-${{ steps.version.outputs.version }}.zip
+          make_latest: true
